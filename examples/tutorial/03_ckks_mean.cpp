@@ -58,11 +58,18 @@ int main(int argc, char* argv[])
   //===========================================================================
 
   // We can also sum all of slots, leaving the sum in each slot
-
-  totalSums(c);
   double divisor = 1 / double(n);
-  c *= divisor;
+  HELIB_NTIMER_START(meanTimer); // starts a timer called "meanTimer"
+
+  // 1. sum all values of the vector
   // (c[0], ..., c[n-1]) = (S, ..., S), where S = sum_{i=0}^{n-1} c[i]
+  totalSums(c);
+
+  // 2. multiply each value of the vector by divisor
+  c *= divisor;
+
+  HELIB_NTIMER_STOP(meanTimer); // stops the time "meanTimer"
+  printNamedTimer(cout, "meanTimer");
 
   cout << "c.capacity=" << c.capacity() << " ";
   cout << "c.errorBound=" << c.errorBound() << "\n";
