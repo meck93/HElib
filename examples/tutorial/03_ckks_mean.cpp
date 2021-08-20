@@ -45,8 +45,9 @@ int main(int argc, char* argv[])
 
   // Let's encrypt something!
   vector<double> v(n);
-  for (long i = 0; i < n; i++)
-    v[i] = sin(2.0 * PI * i / n);
+  for (long i = 0; i < n; i++) {
+    v[i] = double(i);
+  }
   PtxtArray p(context, v);
   Ctxt c(publicKey);
   p.encrypt(c);
@@ -56,92 +57,41 @@ int main(int argc, char* argv[])
 
   //===========================================================================
 
-  // We can rotate the data in the slots by any amount.
-
-  rotate(c, 2);
-  // rotate c right by 2:
-  // (c[0], ..., c[n-1]) = (c[n-2], c[n-1], c[0], c[1], ..., c[n-3])
-
-  cout << "c.capacity=" << c.capacity() << " ";
-  cout << "c.errorBound=" << c.errorBound() << "\n";
-
-  rotate(c, -1);
-  // rotate c left by 1
-  // (c[0], ..., c[n-1]) = (c[1], c[2], ..., c[n-1], c[0])
-
-  cout << "c.capacity=" << c.capacity() << " ";
-  cout << "c.errorBound=" << c.errorBound() << "\n";
-
-  //===========================================================================
-
-  // We can shift the data in the slots by any amount.
-
-  shift(c, 2);
-  // rotate c right by 2:
-  // (c[0], ..., c[n-1]) = (0, 0, c[0], c[1], ..., c[n-3])
-
-  cout << "c.capacity=" << c.capacity() << " ";
-  cout << "c.errorBound=" << c.errorBound() << "\n";
-
-  shift(c, -1);
-  // rotate c left by 1
-  // (c[0], ..., c[n-1]) = (c[1], c[2], ..., c[n-1], 0)
-
-  cout << "c.capacity=" << c.capacity() << " ";
-  cout << "c.errorBound=" << c.errorBound() << "\n";
-
-  //===========================================================================
-
   // We can also sum all of slots, leaving the sum in each slot
 
   totalSums(c);
+  double divisor = 1 / double(n);
+  c *= divisor;
   // (c[0], ..., c[n-1]) = (S, ..., S), where S = sum_{i=0}^{n-1} c[i]
 
   cout << "c.capacity=" << c.capacity() << " ";
   cout << "c.errorBound=" << c.errorBound() << "\n";
-
-  // There are a number of other data movement operations available.
-
-  //===========================================================================
-
-  // Let's perform the same computation on the plaintext:
-
-  rotate(p, 2);
-  rotate(p, -1);
-  shift(p, 2);
-  shift(p, -1);
-  totalSums(p);
 
   //===========================================================================
 
   // Let's decrypt and compare:
   PtxtArray pp(context);
   pp.decrypt(c, secretKey);
+  cout << "pp=" << pp.pa << "\n";
 
-  double distance = Distance(p, pp);
-  cout << "distance=" << distance << "\n";
+  // PtxtArray allMeans = pp;
+  // TODO: figure out why getData() doesn't work
+  std::vector<double> mean = pp.pa.getData();
 
-  cout << "pp" << pp << "\n";
+  // Here, p is the "correct value" and you want to test if pp is "close" to
+  // it.
 
-  // For debugging, you can also make "approximate" comparisons as follows:
-  if (pp == Approx(p))
-    cout << "GOOD\n";
-  else
-    cout << "BAD\n";
-
-  // Here, p is the "correct value" and you want to test if pp is "close" to it.
-
-  // NOTES: The Approx function (which is really a class constructor) takes two
-  // optional arguments:
+  // NOTES: The Approx function (which is really a class constructor) takes
+  // two optional arguments:
   //   double tolerance; // default is 0.01
   //   double floor;     // default is 1.0
   //
   // The expression
   //   a == Approx(b, tolerance, floor)
   // is true iff Distance(a,b) <= tolerance*max(Norm(b),floor), The idea is
-  // that it checks if the relative error is at most tolerance, unless Norm(b)
-  // itself is too small (as determined by floor). Here, Norm(b) is the max
-  // absolute value of the slots, and Distance(a,b) = Norm(a-b).
+  // that it checks if the relative error is at most tolerance, unless
+  // Norm(b) itself is too small (as determined by floor). Here, Norm(b) is
+  // the max absolute value of the slots, and Distance(a,b) = Norm(a-b).
   //
   // In addition to PtxtArray's, you can compare values of type double or
   // complex<double>, and vectors of type double or complex<double>.
