@@ -69,32 +69,15 @@ int main(int argc, char* argv[])
 
   //===========================================================================
 
-  // Let's decrypt and compare:
+  // Let's decrypt:
   PtxtArray pp(context);
   pp.decrypt(c, secretKey);
-  cout << "pp=" << pp.pa << "\n";
 
-  // PtxtArray allMeans = pp;
-  // TODO: figure out why getData() doesn't work
-  std::vector<double> mean = pp.pa.getData();
+  // Decode and store the vector of means
+  std::vector<double> meanArray;
+  pp.store(meanArray);
 
-  // Here, p is the "correct value" and you want to test if pp is "close" to
-  // it.
-
-  // NOTES: The Approx function (which is really a class constructor) takes
-  // two optional arguments:
-  //   double tolerance; // default is 0.01
-  //   double floor;     // default is 1.0
-  //
-  // The expression
-  //   a == Approx(b, tolerance, floor)
-  // is true iff Distance(a,b) <= tolerance*max(Norm(b),floor), The idea is
-  // that it checks if the relative error is at most tolerance, unless
-  // Norm(b) itself is too small (as determined by floor). Here, Norm(b) is
-  // the max absolute value of the slots, and Distance(a,b) = Norm(a-b).
-  //
-  // In addition to PtxtArray's, you can compare values of type double or
-  // complex<double>, and vectors of type double or complex<double>.
+  cout << "mean=" << meanArray[0] << "\n";
 
   return 0;
 }
