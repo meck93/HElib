@@ -25,11 +25,11 @@ include(GNUInstallDirs)
 
 # Set default output folder
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
-    "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}")
+    "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}/build")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY
-    "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}")
+    "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}/build")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY
-    "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}")
+    "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}/build")
 
 # STRINGS avoids having the 2 newline characters at the end of the string.
 # Alternatively it's possible to use file(READ ...) and then
