@@ -121,6 +121,8 @@ int main(int argc, char* argv[])
   double distance = Distance(p, pp);
   cout << "distance=" << distance << "\n";
 
+  cout << "pp" << pp << "\n";
+
   // For debugging, you can also make "approximate" comparisons as follows:
   if (pp == Approx(p))
     cout << "GOOD\n";
